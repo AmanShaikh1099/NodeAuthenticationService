@@ -30,12 +30,12 @@ This is a simple authentication service built using **Node.js**, **Express.js**,
    ```bash
     npm install
 3. **Database Setup**:
-   The SQLite3 database is automatically created when you first run the service. However, you can modify the database schema if needed in db.js.
-4.**Configure the Port**
+   The SQLite3 database is automatically created when you first run the service. However, you can modify the database schema if needed in db.js
+4. **Configure the Port**:
    You can change the port number for the backend service by editing the PORT variable in the .env file or directly in service.js:
    ```js
    const PORT = process.env.PORT || 3000
-5.**Run the Application**
+5. **Run the Application**:
  Start the server by running:
  ```bash
 npm run dev
