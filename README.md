@@ -38,4 +38,4 @@ This is a simple authentication service built using **Node.js**, **Express.js**,
 5. **Run the Application**:
  Start the server by running:
  ```bash
-npm run dev
+   npm run dev
