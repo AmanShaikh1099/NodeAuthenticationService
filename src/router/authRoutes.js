@@ -19,7 +19,9 @@ router.post("/register", (req, res) => {
       expiresIn: "1m",
     });
     return res.status(201).json({ message: "User registered successfully" ,
-      "token": token
+      "token": token,
+    
+      
     });
   } catch (err) {
     return res.status(501).json({ error: err.message });
@@ -38,7 +40,7 @@ router.post("/login", (req, res) => {
       return res.status(401).json({message: "Invalid password"})
     }
   const token = jwt.sign({ id: getUser.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1m' })
-  return res.status(200).json({message: "User logged in successfully","token": token})
+  return res.status(200).json({message: "User logged in successfully","token": token, "id": getUser.id })
  }
   catch(err){ 
    return  res.status(501).json({error: err.message})
