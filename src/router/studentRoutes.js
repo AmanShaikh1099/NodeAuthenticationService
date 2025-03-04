@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
         name, 
         student_class, 
         parent_contact, 
+        school,
         CASE 
             WHEN enrolled = 0 THEN 'false' 
             WHEN enrolled = 1 THEN 'true' 
@@ -31,16 +32,17 @@ router.get("/", (req, res) => {
     }
 });
 router.post("/", (req, res) => {
-    const { name, student_class, parent_contact } = req.body
+    const { name, student_class, parent_contact, school } = req.body
     try{
-        const student = db.prepare(`INSERT INTO STUDENT (name, student_class, parent_contact) VALUES (?, ?, ?)`)
-        const insertStudent = student.run(name, student_class , parent_contact )
+        const student = db.prepare(`INSERT INTO STUDENT (name, student_class, parent_contact, school) VALUES (?, ?, ?, ?)`)
+        const insertStudent = student.run(name, student_class , parent_contact, school)
         const lastUpdatedId = insertStudent.lastInsertRowid; 
 
         const updateResults = db.prepare(`SELECT student_id, 
         name, 
         student_class, 
-        parent_contact FROM student WHERE student_id = ?`).get(lastUpdatedId);
+        parent_contact,
+        school FROM student WHERE student_id = ?`).get(lastUpdatedId);
 
         console.log(updateResults);
         if(!insertStudent || !updateResults){
@@ -60,7 +62,7 @@ router.post("/", (req, res) => {
             return res.status(400).json({ message: "No fields provided for update" });
         }
     
-        const validFields = ["amount_quoted" ,"enrolled", "amount_recieved","recieved_by"];
+        const validFields = ["amount_quoted" ,"enrolled", "amount_recieved","recieved_by","enrolled_subjects"];
         const updateKeys = Object.keys(updates).filter((key) => validFields.includes(key));
     
         let query = "UPDATE student SET ";

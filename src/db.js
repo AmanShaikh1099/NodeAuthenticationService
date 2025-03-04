@@ -19,6 +19,8 @@ db.exec(`
         parent_contact TEXT,
         amount_quoted INTEGER DEFAULT 0,
         amount_recieved INTEGER DEFAULT 0,
-        recieved_by TEXT
+        recieved_by TEXT,
+        school TEXT,    
+        enrolled_subjects TEXT
  )`)
 export default db

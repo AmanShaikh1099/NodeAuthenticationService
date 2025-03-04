@@ -39,7 +39,7 @@ router.post("/login", (req, res) => {
     if(!decryptedPassword){
       return res.status(401).json({message: "Invalid password"})
     }
-  const token = jwt.sign({ id: getUser.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1m' })
+  const token = jwt.sign({ id: getUser.id }, process.env.JWT_SECRET_KEY, { expiresIn: '10m' })
   return res.status(200).json({message: "User logged in successfully","token": token, "id": getUser.id })
  }
   catch(err){ 
