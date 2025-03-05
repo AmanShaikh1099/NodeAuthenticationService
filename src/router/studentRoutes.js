@@ -31,6 +31,22 @@ router.get("/", (req, res) => {
         return res.status(501).json({error: err.message})
     }
 });
+router.get("/:id", (req, res) => {
+    const student_id = req.params.id;
+    try{
+        const student = db.prepare(`SELECT * FROM student WHERE student_id = ?`)
+        const result = student.get(student_id)
+        if(!result){
+            return res.status(404).json({message: "Student not found"})
+        }
+        result.enrolled_subjects = JSON.parse(result.enrolled_subjects);
+        result.enrolled = result.enrolled === 1;
+        return res.status(200).json(result)
+    }
+    catch(err){
+        return res.status(501).json({error: err.message})
+    }
+}),
 router.post("/", (req, res) => {
     const { name, student_class, parent_contact, school } = req.body
     try{
