@@ -160,6 +160,56 @@ router.patch("/:id", (req, res) => {
         );
     });
 });
-    
-    
-    export default router;
+router.delete("/:id", (req, res) => {
+    const {id} = req.params;
+    console.log("Student Id ",id);
+    const sql = `DELETE FROM student WHERE student_id = ?`;
+    db.run(sql, [id], function(err) {
+        if(err) {
+            return res.status(500).json({error: err.message});
+        }
+        if(this.changes === 0) {
+            return res.status(404).json({message: "Student not found"});
+        }
+        return res.status(200).json({message: "Student deleted successfully"});
+    });
+})
+router.post("/payments/:id", (req,res) =>{
+    const {id} = req.params;
+    const {amount_recieved, recieved_by, date} = req.body;
+    console.log(id, amount_recieved, recieved_by, date);
+    const sql = `INSERT INTO payments (payment_id, amount_recieved, recieved_by, date) VALUES (?, ?, ?, ?)`;
+    db.run(sql,[id, amount_recieved, recieved_by, date], function(err){
+        if(err){
+            return res.status(500).json({error: err.message});
+        }
+        return res.status(201).json({message: "Payment added successfully"});
+    })
+})
+router.get("/payments/:id", (req, res) => {
+    const {id} = req.params;
+    let userName = ""
+    let amountQuoted = ""
+    const sqlUserName = `SELECT name, amount_quoted FROM student WHERE student_id = ?`;
+    db.get(sqlUserName,[id], (err,row)=>{
+    if(err){
+        return res.status(505).json({error: err.message})
+    }
+    userName = row.name
+    amountQuoted = row.amount_quoted
+    console.log(userName, amountQuoted)
+    })
+    const sql = `SELECT * FROM payments WHERE payment_id = ?`;
+    db.all(sql, [id], (err, rows) => {
+        if(err){
+            return res.status(500).json({error: err.message});
+        }
+        return res.status(200).json({
+            name: userName,
+            amount_quoted: amountQuoted,
+            data: rows
+        });
+    })
+   
+})
+export default router;

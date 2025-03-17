@@ -6,6 +6,13 @@ const db = new sqlite3.Database('database.sqlite',sqlite3.OPEN_READWRITE, (err) 
         console.error("Error opening database:", err.message);
     } else {
         console.log("Connected to the SQLite database.");
+        db.run("PRAGMA foreign_keys = ON;", (err) => {
+            if (err) {
+                console.error("Failed to enable foreign keys:", err.message);
+            } else {
+                console.log("Foreign key enforcement is enabled.");
+            }
+        });
 
         // Run table creation queries after connection is established
         db.run(`
@@ -34,6 +41,17 @@ const db = new sqlite3.Database('database.sqlite',sqlite3.OPEN_READWRITE, (err) 
             )
         `, (err) => {
             if (err) console.error("Error creating 'student' table:", err.message);
+        });
+        db.run(`
+            CREATE TABLE IF NOT EXISTS payments(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                payment_id INTEGER,
+                amount_recieved INTEGER,
+                date TEXT,
+                recieved_by TEXT,
+                FOREIGN KEY (payment_id) REFERENCES student(student_id) ON DELETE CASCADE
+        )`,(err) => {
+            if (err) console.error("Error creating 'payments' table:", err.message);
         });
     }
 });
